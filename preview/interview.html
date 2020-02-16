@@ -1,0 +1,1381 @@
+<html>
+  <head>
+	  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>i5ting_ztree_toc:interview</title>
+		<link href="toc/style/github-bf51422f4bb36427d391e4b75a1daa083c2d840e.css" media="all" rel="stylesheet" type="text/css"/>
+		<link href="toc/style/github2-d731afd4f624c99a4b19ad69f3083cd6d02b81d5.css" media="all" rel="stylesheet" type="text/css"/>
+		<link href="toc/css/zTreeStyle/zTreeStyle.css" media="all" rel="stylesheet" type="text/css"/>
+	  <style>
+		pre {
+		    counter-reset: line-numbering;
+		    border: solid 1px #d9d9d9;
+		    border-radius: 0;
+		    background: #fff;
+		    padding: 0;
+		    line-height: 23px;
+		    margin-bottom: 30px;
+		    white-space: pre;
+		    overflow-x: auto;
+		    word-break: inherit;
+		    word-wrap: inherit;
+		}
+
+		pre a::before {
+		  content: counter(line-numbering);
+		  counter-increment: line-numbering;
+		  padding-right: 1em; /* space after numbers */
+		  width: 25px;
+		  text-align: right;
+		  opacity: 0.7;
+		  display: inline-block;
+		  color: #aaa;
+		  background: #eee;
+		  margin-right: 16px;
+		  padding: 2px 10px;
+		  font-size: 13px;
+		  -webkit-touch-callout: none;
+		  -webkit-user-select: none;
+		  -khtml-user-select: none;
+		  -moz-user-select: none;
+		  -ms-user-select: none;
+		  user-select: none;
+		}
+
+		pre a:first-of-type::before {
+		  padding-top: 10px;
+		}
+
+		pre a:last-of-type::before {
+		  padding-bottom: 10px;
+		}
+
+		pre a:only-of-type::before {
+		  padding: 10px;
+		}
+
+		.highlight { background-color: #ffffcc } /* RIGHT */
+		</style>
+  </head>
+  <body>
+	  <div>
+				<div style='width:25%;'>
+						<ul id="tree" class="ztree" style='width:100%'>
+
+						</ul>
+				</div>
+        <div id='readme' style='width:70%;margin-left:20%;'>
+          	<article class='markdown-body'>
+            	<p>..~~~~
+1.路由的懒加载
+<a href="https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6">https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6</a></p>
+<pre><code>
+</code></pre><p>把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就更加高效了。
+const Foo = () =&gt; import(/<em> webpackChunkName: &quot;group-foo&quot; </em>/ &#39;./Foo.vue&#39;)
+const Bar = () =&gt; import(/<em> webpackChunkName: &quot;group-foo&quot; </em>/ &#39;./Bar.vue&#39;)
+const Baz = () =&gt; import(/<em> webpackChunkName: &quot;group-foo&quot; </em>/ &#39;./Baz.vue&#39;)</p>
+<pre><code>
+</code></pre><p>2.iterator接口目的是为所有的数据结构提供一种统一的访问机制,数据结构只要具有Symbol.iterator属性,那就可以认为他是可遍历的</p>
+<pre><code>
+~~~~javascript
+3.keep-alive的写法
+     &lt;keep-alive &gt;
+      &lt;router-view v-if=&quot;$route.meta.keepAlive&quot;&gt;&lt;/router-view&gt;
+    &lt;/keep-alive&gt;
+    &lt;router-view v-if=&quot;!$route.meta.keepAlive&quot;&gt;&lt;/router-view&gt;
+v-if写的地方还要多注意,如果写在keep-alive上相当于直接销毁
+</code></pre><pre><code>4 for in 是可以循环数组和对象,主要是对key的循环，for in读取键名,for of读取键值
+</code></pre><pre><code>5 new Set主要是为了去重,set结构遍历的时候返回的是一个值,而map结构返回的是一个数组,该数组的两个成员分别为当前map成员的键名和键值/调用后entries返回的是一个便利器对象,用于遍历[键名,键值]组成的数组---es6的数组,set,map都有下面这个方法
+for-of能够正确的识别32位的UTF-16 并不是所有的类似数组的对象都有Iterator接口,一个最简单的方法就是用array,.from将其转成数组
+1.对象想要获取到键值,直接用object.keys可以生成一个数组，再用for of进行遍历,或者用generator函数将对象重新包装一下
+2.for of对比for in 和foreach,foreach不能return break continue, 而for of可以 for in 只能拿到key值
+</code></pre><pre><code>6 generator是es6提供的一种异步编程解决方案，执行generator函数会返回一个遍历器对象
+generator函数调用后并不会执行,返回的也不是一个函数运行结果,而是一个指向内部状态的指针对象
+----调用generator函数返回一个遍历起对象,代表generator函数的内部的指针,以后每次调用遍历器对象的next方法,就会返回有着value和done两个属性的对象,value表示的是当前内部状态的值,done属性是一个boolean值,表示是否遍历结束
+1.yield只能出现在generator函数里面
+
+</code></pre><pre><code class="lang-javascript">7 for...of循环可以自动遍历Generator函数生成的Iterator对象,且此时不再调用next方法
+        function* fibonacci() {
+            let [prev, curr] = [0, 1]
+            for (;;) {
+                [prev, curr] = [curr, prev + curr]
+                yield curr
+            }
+        }
+        for (let n of fibonacci()) {
+            if (n &gt; 1000) break;
+            console.log(n, &#39;n&#39;);
+        }
+
+7.1.原生的js对象没有遍历接口,无法使用for-of循环,通过generator函数为他击伤这个接口就可以了
+        function* objEntries(obj) {
+            console.log(555, obj);
+            let propkeys = Reflect.ownKeys(obj)
+            console.log(444, propkeys);
+            for (let propkey of propkeys) {
+                yield [propkey, obj[propkey]]
+            }
+        }
+        let jane = {first: &#39;jane&#39;, last: &#39;doe&#39;}
+
+        for(let [key, value] of objEntries(jane)) {
+            console.log(`${key}:${value}`); 
+        }
+7.2 
+ // 还有一种,将generator函数加到对象的Symbol.iterator属性上
+        function* objectEntries() {
+            let propKeys = Object.keys(this)
+            for (let propKey of propKeys) {
+                yield [propKey, this[propKey]]
+            }
+        } 
+
+        let jane = {
+            first: &#39;jane&#39;,
+            last: &#39;doe&#39;
+        }
+        jane[Symbol.iterator] = objectEntries
+
+        for(let [key, value] of jane) {
+            console.log(`${key}: ${value}`);
+        }
+7.3
+我这个函数yield后面的程序是在操作数据，而我们要先请求数据之后才能操作，因为请求数据，有的快有的慢。那为了保证一定能够获取到数据之后再执行，就可以使用我们这个generator函数了
+</code></pre>
+<pre><code>8 除了for of循环,扩展运算符...，解构赋值和array.from 方法内部调用的都是遍历器接口,这意味着,他们都可以将generator函数返回的iterator对方作为参数
+</code></pre><pre><code>9 array.from必须要有length.不然是空数组,对象里面的key必须是数组
+</code></pre><pre><code class="lang-javascript">10 如果generator函数内部没有部署try...catch代码块,那么throw方法会从被外部的catch抛出
+  var g = function* () {
+            while (true) {
+                yield;
+                console.log(&#39;内部捕获&#39;, e)
+            }
+        }
+
+        var i = g()
+        i.next()
+
+        try {
+            i.throw(&#39;a&#39;)
+            i.throw(&#39;b&#39;)
+        } catch (e) {
+            console.log(&#39;外部捕获&#39;, e);
+        }
+thorow方法被捕获以后会附带执行下一条yield表达式,即附带执行一次next方法
+</code></pre>
+<pre><code class="lang-javascript">11 generator函数体外抛出的错误可以在函数体内捕获,反过来,generator函数体内抛出的错误也可以被函数体外的catch捕获
+        function* foo() {
+            var x = yield 3
+            var y = x.toUpperCase()
+            yield y
+        }
+        var it = foo()
+        it.next()
+
+        try {
+            it.next(42)
+        } catch(err) {
+            console.log(err);
+        }
+11.1 一旦generator执行过程中抛出错误,就不会再执行下去了,如果此后还调用next方法,会犯坏u 一个value 为undefined和done为true的对象
+</code></pre>
+<pre><code class="lang-javascript">12 generator 函数里面有一些reture方法,可以返回给定的值,并且终结generator函数的遍历
+        function* gen() {
+            yield 1;
+            yield 2;
+            yield 3;
+        }
+        var g = gen()
+        console.log(g.next()); // 1 false
+        console.log(g.return(555)); // 555 true
+12.1 调用return 方法就开始执行finanlly代码块,然后等到finanlly代码块执行完再执行return方法
+12.2   用yield*语句,再generator函数里面执行另一个generator函数
+12.3 yield*后面的generator函数(没有return语句时)等同于在generator函数内部部署一个for of循环
+</code></pre>
+<pre><code class="lang-javascript">13 //如果被代理的generator函数有return语句,那么便可以向代理他的generator函数返回数据
+        function *foo() {
+            yield 2;
+            yield 3;
+            return &quot;周欢&quot;
+        }
+
+        function *bar() {
+            yield 1;
+            var v = yield *foo()
+            console.log(&#39;v: &#39; + v);
+            yield 4
+        }
+        var it = bar()
+        console.log(it.next()); // 1
+        console.log(it.next()); // 2
+        console.log(it.next()); // 3
+        console.log(it.next()); //v 周欢 4
+        console.log(it.next()); // undefined
+</code></pre>
+<pre><code class="lang-javascript">14怎么用yield取出嵌套数组的所有成员
+       var arr = [&#39;a&#39;, [&#39;b&#39;, &#39;c&#39;], [&#39;d&#39;, &#39;e&#39;]]
+        function* iterTree(tree) {
+            if (Array.isArray(tree)) {
+                for(let i=0; i &lt; tree.length; i ++) {
+                    yield* iterTree(tree[i]) //generator函数里面输出函数 必须用yield*
+                }
+            } else {
+                yield tree
+            }
+        }
+
+        for(let x of iterTree(arr)) {
+            console.log(x);
+        }
+</code></pre>
+<pre><code class="lang-javascript">15 // genrrator函数g返回的遍历器obj是g的实例,而且继承了g.prototype,
+
+        function* g() {
+
+        }
+        g.prototype.hello = function () {
+            return &#39;hi&#39;
+        }
+        let obj = g()
+        console.log(obj instanceof g); // true
+    //但是如果g当作是普通的构造函数,则不会生效,因为g总是返回遍历器对象,而不是this
+        function* g() {
+            this.a = 11
+        }
+        let text = g()
+        console.log(text.a, 666); // undefined
+15.1 generator函数不能和new一起使用,否则会报错
+
+</code></pre>
+<pre><code class="lang-javascript">16 让generator函数返回一个正常的对象实例,既可以用next方法,又可以获取正常的this
+ // ajax获取数据
+        function* main() {
+            var result = yield request(&#39;https://www.baidu.com&#39;)
+            var resp = JSON.parse(result)
+            console.log(resp.value);  
+        }
+        function request(url) {
+           makeAjaxCall(url, function(response){
+               it.next(response)
+           })
+        }
+        var it = main()
+        it.next()
+
+</code></pre>
+<pre><code>17generator读取文件
+</code></pre><pre><code class="lang-javascript">18
+18.1
+当你要把 Vue Router 添加进来，我们需要做的是，将组件 (components) 映射到路由 (routes)，然后告诉 Vue Router 在哪里渲染它们
+18.2这种跳转是组件间的跳转,必须要写到路由里面,路由的跳转来切换组件
+    &lt;div&gt;
+        &lt;router-link to=&quot;/router2&quot;&gt;我是测试1&lt;/router-link&gt;
+    &lt;/div&gt;
+18.3$route对象 
+表示当前激活的路由的状态信息，包含了当前 URL 解析得到的信息，还有 URL 匹配到的 route records（路由记录）。
+**1.$route.path**
+      字符串，对应当前路由的路径，总是解析为绝对路径，如 &quot;/foo/bar&quot;。
+**2.$route.params**
+      一个 key/value 对象，包含了 动态片段 和 全匹配片段，
+      如果没有路由参数，就是一个空对象。
+**3.$route.query**
+      一个 key/value 对象，表示 URL 查询参数。
+      例如，对于路径 /foo?user=1，则有 $route.query.user == 1，
+      如果没有查询参数，则是个空对象。
+**4.$route.hash**
+      当前路由的 hash 值 (不带 #) ，如果没有 hash 值，则为空字符串。锚点
+**5.$route.fullPath**
+      完成解析后的 URL，包含查询参数和 hash 的完整路径。
+**6.$route.matched**
+      数组，包含当前匹配的路径中所包含的所有片段所对应的配置参数对象。
+**7.$route.name    当前路径名字**
+**8.$route.meta  路由元信息
+</code></pre>
+<pre><code>18  app.vue 和index.html是靠什么联系起来的
+打包后的js 会引入到html里面执行挂载更新替换,等等---最基本的前端三件套啊html，css，js  打包后的js就被引入到index.html里面去啊--所有的操作都在js里面完成了
+</code></pre><pre><code class="lang-javascript">19
+ {
+        path: &quot;&quot;,
+        component: Layout,
+        redirect: &quot;dashboard&quot;, //如果是空的话重定向就是某一个
+        children: [{
+            path: &quot;dashboard&quot;,
+            component: _import(&quot;dashboard/index&quot;),
+            name: &quot;Dashboard&quot;,
+            meta: {
+                title: &quot;首页&quot;,
+                icon: &quot;icon-shouye&quot;,
+                noCache: true
+            }
+        }]
+    },
+
+</code></pre>
+<pre><code class="lang-javascript">20
+const router = new VueRouter({
+  routes: [
+    { path: &#39;/user/:id&#39;, component: User,
+      children: [
+        {
+          // 当 /user/:id/profile 匹配成功，
+          // UserProfile 会被渲染在 User 的 &lt;router-view&gt; 中
+          path: &#39;profile&#39;,
+          component: UserProfile
+        },
+        {
+          // 当 /user/:id/posts 匹配成功
+          // UserPosts 会被渲染在 User 的 &lt;router-view&gt; 中
+          path: &#39;posts&#39;,
+          component: UserPosts
+        }
+      ]
+    }
+  ]
+})
+// 当你访问 /user/foo 时，User 的出口是不会渲染任何东西，这是因为没有匹配到合适的子路由
+ children: [
+        // 当 /user/:id 匹配成功，
+        // UserHome 会被渲染在 User 的 &lt;router-view&gt; 中
+        { path: &#39;&#39;, component: UserHome },
+
+        // ...其他子路由
+      ]
+实际例子
+ {
+        path: &quot;&quot;,
+        component: Layout,
+        redirect: &quot;dashboard&quot;,
+        children: [{
+            path: &quot;dashboard&quot;,
+            component: _import(&quot;dashboard/index&quot;),
+            name: &quot;Dashboard&quot;,
+            meta: {
+                title: &quot;首页&quot;,
+                icon: &quot;icon-shouye&quot;,
+                noCache: true
+            }
+        }]
+    },
+</code></pre>
+<pre><code class="lang-javascript">21 路由守卫
+
+to：即将要进入的目标路由对象
+from：当前导航正要离开的路由
+next：执行下一步
+
+beforeEach是路由跳转前执行的，afterEach是路由跳转后执行的
+const whiteList = [&#39;/login&#39;, &#39;/register&#39;, &#39;/changePassword&#39;] // 不重定向白名单
+router.beforeEach((to, from, next) =&gt; {
+    NProgress.start()
+    if (store.getters.account.token) {
+        if (to.path === &#39;/login&#39;) {
+            next({ path: &#39;&#39; })
+        } else {
+            let resdata = localStorage.get(&#39;userResData&#39;);
+            if (store.getters.addRouters.length === 0 &amp;&amp; resdata.length) { // 判断是否已生成可访问的路由表
+                const account = session(&#39;account&#39;)
+                account &amp;&amp; getUserMenus(account.adminId).then(() =&gt; {
+                    next({...to, replace: true }) // hack方法 确保addRoutes已完成 ,replace: true so the navigation will not leave a history record
+                })
+
+            } else {
+                next()
+            }
+            next()
+        }
+    } else {
+        if (whiteList.indexOf(to.path) !== -1) { //如果是这几个路由的话,就直接进入下一步
+            next()
+        } else {
+            next(&#39;/login&#39;)
+            NProgress.done()
+        }
+    }
+})
+router.afterEach(() =&gt; {
+    NProgress.done()
+})
+
+路由守卫只要是做跳转拦截,实际例子中,如果token存在,就是表示已经登陆,如果是login,直接跳去首页,如果不是判断有没有生成路由表,有的话就进入下一步，如果没有登陆,一律跳到login,除了设置的白名单
+21.1
+路由独享的守卫beforeEnter
+不同的是：全局守卫可以作用于全局，路由独享守卫只作用于被设置守卫的路由
+21.1
+beforeRouterEnter来判断是一定条件下才执行相应的页面跳转
+  const pages = {
+    &#39;formula&#39;: true,
+    &#39;formula-add&#39;: true
+  }
+
+// 销毁用到的recipeName
+    beforeRouteEnter (to, from, next) {
+      next(vm =&gt; {
+        // 通过 `vm` 访问组件实例
+        if(pages[from.name]) {
+          vm.buildModel()
+        } else {
+          vm.$store.commit(&#39;clearSelectRecipe&#39;)
+        }
+      })
+    }
+ buildModel() {
+        this.opModel.recipeName = this.$store.state.order.selectRecipe.recipeName
+      }
+21.2如何写一个路由守卫
+ 1.首先写一个permission的js,然后引入到import &#39;./permission.js&#39; // 操作权限指令
+ 2.这里必须要next才能执行,而且每次触发路由都要去做next的调用
+import router from &#39;./router&#39;
+router.beforeEach((to, from, next)=&gt; {
+    // console.log(to, &#39;to&#39;);
+    if (to.path === &#39;/hello&#39;) {
+        console.log(&#39;1111&#39;)
+        next({ path: &#39;/alive&#39; })
+    } else {
+        next()
+    }
+    console.log(from, &#39;from&#39;);
+    console.log(next, &#39;next&#39;);
+})
+</code></pre>
+<pre><code class="lang-javascript">22 router-link相当于是a标签,通过切换路由来切换组件
+组件可以引进来,也可以直接写const Bar = { template: &#39;&lt;div&gt;bar&lt;/div&gt;&#39; }
+一个是经过vue-loader处理过的，一个直接是个对象
+</code></pre>
+<pre><code>23 $router和$route的区别
+我们可以在任何组件内通过 this.$router 访问路由器，也可以通过 this.$route 访问当前路由
+route相当于当前正在跳转的路由对象。。可以从里面获取name,path,params,query等
+
+router为VueRouter的实例，相当于一个全局的路由器对象，里面含有很多属性和子对象，例如history对象。。。经常用的跳转链接就可以用this.$router.push，和router-link跳转一样。。。
+
+this.$router.push会往history栈中添加一个新的记录
+
+我们使用 this.$router 的原因是我们并不想在每个独立需要封装路由的组件中都导入路由
+
+length 属性声明了浏览器历史列表中的元素数量。
+
+注意：Internet Explorer和Opera从0开始，而Firefox、Chrome和Safari从1开始。
+
+</code></pre><pre><code class="lang-javascript">24 query和params跳转的区别
+路由传参的方式
+//可以手写完整的path
+1.直接在路由上面配id的是用params来接收
+   {
+      path: &#39;/router1/:id&#39;,
+      name: &#39;router1&#39;,
+      component: router1,
+      meta: {
+        keepAlive: false
+      }
+    },
+
+     toRouter() {
+            this.$router.push(
+                {
+                    path: `/router1/1`
+                }
+            )
+        }
+    用console.log(this.$route.params, &#39;toRouter&#39;); 获取
+2. path对应query传参数,用query接收
+       this.$router.push(
+                {
+                    path: `/router1`,
+                    query: {
+                        age: 12
+                    }
+
+                }
+            )
+3.name 对应params的传输参数
+ this.$router.push(
+                {
+                    name: `router1`,
+                    params: {
+                        age: 12
+                    }
+
+                }
+            )
+4.直接写path或者name都可以
+  toRouter() {
+            this.$router.push(
+               &#39;/router1&#39;
+            )
+        }
+跳转到这个url显示什么组件，得配置路由。router跳转和&lt;router-link&gt;标签跳转，规则差不多
+params与name 不会显示在地址栏,隐藏性比较好
+query更加类似于我们ajax中get传参，params则类似于post，说的再简单一点，前者在浏览器地址栏中显示参数，后者则不显示
+
+因为它是路由参数，而query是url的查询参数也就是？号后面的字符串
+
+important
+你可以在一个路由中设置多段“路径参数”，对应的值都会设置到 $route.params 中
+</code></pre>
+<pre><code class="lang-javascript">25 响应路由参数的变化
+复用就是多个不同的路由里面有相同的组件,这个必须是组件的复用才会出现
+ watch: {
+    &#39;$route&#39; (to, from) {
+      // 对路由变化作出响应...
+    }
+  }
+{ path: &#39;*&#39;, redirect: &#39;/404&#39;, hidden: true }
+域名+非固定的路由,通配到undefined
+</code></pre>
+<pre><code class="lang-javascript">26 嵌套路由相当于是子集组件
+要在嵌套的出口中渲染组件，需要在 VueRouter 的参数中使用 children 配置
+const router = new VueRouter({
+  routes: [
+    { path: &#39;/user/:id&#39;, component: User,
+      children: [
+        {
+          // 当 /user/:id/profile 匹配成功，
+          // UserProfile 会被渲染在 User 的 &lt;router-view&gt; 中
+          path: &#39;profile&#39;,
+          component: UserProfile
+        },
+        {
+          // 当 /user/:id/posts 匹配成功
+          // UserPosts 会被渲染在 User 的 &lt;router-view&gt; 中
+          path: &#39;posts&#39;,
+          component: UserPosts
+        }
+      ]
+    }
+  ]
+})
+在父组件里面要用router-view
+</code></pre>
+<pre><code>27 
+router.replace与跟 router.push 很像，唯一的不同就是，它不会向 history 添加新记录，而是跟它的方法名一样 —— 替换掉当前的 history 记录
+</code></pre><pre><code>28
+注意导航守卫并没有应用在跳转路由上，而仅仅应用在其目标上。在下面这个例子中，为 /a 路由添加一个 beforeEach 或 beforeLeave 守卫并不会有任何效果。
+</code></pre><pre><code class="lang-javascript">29
+ { path: &#39;/user/:id&#39;, component: User, props: true }, 
+   props: true设置为true就可以接收传过来的值
+   如果是params传参数也是可以直接用props: true
+如果是query传参数props: (route) =&gt; ({ query: route.query.q })直接接收query
+如果是对象的话,直接注入到props里面 
+
+</code></pre>
+<pre><code>30执行顺序
+已经了解了setTimeout是宏任务会在最后执行的前提
+async 函数返回一个promise对象,可以添加then方法添加回调函数,当函数执行时,一旦遇到await会先返回,等异步完成再执行函数体后面的数
+</code></pre><pre><code class="lang-javascript">31 关于执行顺序
+        async function async1(){
+            console.log(&#39;1&#39;)
+            await async2() //因为await 后面的是promise,调用之后就是被await成promise了,所以后面的2还需要等待执行，它只是相当于promise.then
+            console.log(&#39;2&#39;)
+        }
+        async function async2(){
+            console.log(&#39;3&#39;)
+        }
+        console.log(&#39;4&#39;)
+        setTimeout(function(){
+            console.log(&#39;5&#39;) 
+        },0)  
+        async1();
+        new Promise(function(resolve){
+            console.log(&#39;6&#39;)
+            resolve();
+        }).then(function(){
+            console.log(&#39;7&#39;)
+        })
+        console.log(&#39;8&#39;)
+
+       // 4 1 3 6 8 2 7 5
+单线程从上往下执行，碰到异步操作直接丢给其他线程，js线程就不管了,只有等js线程执行完了，才回过头来去看任务队列有没有还未执行的任务，异步操作在其他线程执行完了之后就推到任务队列中,等待js主线程执行完再去执行，那任务队列现在分为微任务和宏任务,微任务要比宏任务的优先级高，js主线程执行完紧接着执行微任务队列，然后再去看宏任务有没有任务执行，主线程是js线程,其他线程是环境提供的，例如浏览器环境提供的定时器，定时器分到定时器的线程去执行的,不在同一条线程的都叫异步，因为没法按顺序执行
+</code></pre>
+<pre><code class="lang-javascript">32 
+32.1全局前置守卫
+正如其名，vue-router 提供的导航守卫主要用来通过跳转或取消的方式守卫导航。有多种机会植入路由导航过程中：全局的, 单个路由独享的, 或者组件级的。next(false)会回到from里面去
+32.2路由独享的守卫
+const router = new VueRouter({
+  routes: [
+    {
+      path: &#39;/foo&#39;,
+      component: Foo,
+      beforeEnter: (to, from, next) =&gt; {
+        // ...
+      }
+    }
+  ]
+})
+32.3 组件内的守卫
+beforeRouteEnter 就是进入这个组件也要做操作
+不能用this
+因为当守卫执行前，组件实例还没被创建
+beforeRouteEnter 里面可以先在前一个页面去加载数据
+
+
+
+</code></pre>
+<pre><code class="lang-javascript">33export 和export default的区别与应用
+export的用法:
+1要么直接输出语句
+export let obj = {
+    name: &#39;jack&#39;,
+    age: 18
+}
+2要么直接用对象抛出去
+let obj = {
+    name: &#39;jack&#39;,
+    age: 18
+}
+let str = &#39;jack&#39;
+export {
+    obj,
+    str
+}
+export命令除了可以输出变量,还可以输出函数或者类
+export function test() {
+    return 5
+}
+2.用import 去拿export出来的数据 
+import { obj, str} from &#39;../testExport&#39;
+console.log(&#39;----&#39;, obj, str);
+import命令具有提升作用,会提升到整个头部再执行.,
+import 是静态执行,所以不能使用表达式和变量
+
+import *  as circle from &#39;../testExport&#39;
+// console.log(&#39;----&#39;, obj, str);
+console.log(circle, &#39;circle&#39;);
+
+3.模块整体加载所在的对象应该是可以静态分析的,所以不允许运行时改变
+4. export default命令
+使用import命令用户需要知道所要加载的变量名和函数名,否则无法加载
+加载模块的时候,import可以为匿名函数起任意的名字
+export default function () {
+    return 5
+}
+import test from &#39;../testExport&#39;
+console.log(test, &#39;test&#39;);
+export default命令也可以出现在非匿名函数前面
+5 规律：
+export default 不用大括号引入,因为是引入指定的模块，一个模块只有一个默认的输出
+直接export 要用大括号,因为是导入不同的变量名
+
+</code></pre>
+<pre><code class="lang-javascript">34.scrollBehavior滚动行为
+使用keep-alive标签后部分安卓机返回缓存页位置不精确问题
+export default new Router({
+    // mode: &#39;history&#39;, //后端支持可开，/切换路径模式，变成history模式,不然路径为/#/home
+    scrollBehavior: () =&gt; ({ y: 0 }), // 滚动条滚动的行为，不加这个默认就会记忆原来滚动条的位置
+    routes: constantRouterMap
+})
+下面：滚动到锚点
+scrollBehavior (to, from, savedPosition) {
+  if (to.hash) {
+    return {
+      selector: to.hash
+    }
+  }
+}
+// 记忆上次滚动行为,不然就是出现在顶部
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  },
+</code></pre>
+<pre><code>35 vue的异步组件
+-----当一个函数返回一个对象时，我们称之他为 工厂函数
+在大型应用中，我们可能需要将应用分割成小一些的代码块,只有需要使用某个模块,才会从服务器加载某个模块, 
+
+</code></pre><pre><code class="lang-javascript">36组件的注册
+1.全局的组件---tempalte里面要写div,其他有些标签也可以,全局组件可以注入到不同的vue实例子里面去,只要创建就注入了，在template里面去写
+&lt;div id=&quot;app&quot;&gt;
+ &lt;input-word&gt;&lt;/input-word&gt;
+&lt;/div&gt;
+&lt;div id=&quot;app2&quot;&gt;
+    &lt;input-word&gt;&lt;/input-word&gt;
+&lt;/div&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/vue&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+   //全局组件
+  Vue.component(&#39;input-word&#39;, {
+  template: &#39;&lt;div&gt;666&lt;/div&gt;&#39;
+})
+new Vue({
+  el: &#39;#app&#39;
+})
+new Vue({
+  el: &#39;#app2&#39;
+})
+&lt;/script&gt;
+
+
+2.局部组件
+ &lt;div id=&quot;app&quot;&gt;    
+     &lt;my-text&gt;&lt;/my-text&gt;
+ &lt;/div&gt;
+ var child = {
+   template: &#39;&lt;div&gt;局部注册组件的内容&lt;/div&gt;&#39;
+ }
+ new Vue({
+   el: &#39;#app&#39;,
+   components: {
+     &#39;my-text&#39; : child
+   }
+ })
+vue的实例化会把全局注册的组件注册到当前实例中
+实例化完成你再全局注册组件是对这个实例不起作用的
+Vue.component是全局注入的表现,项目中局部注入比较多
+组件的复用：注意当点击按钮时，每个组件都会各自独立维护它的 count。因为你每用一次组件，就会有一个它的新实例被创建。
+
+3.组件的返回必须是一个函数,主要是因为组件可以复用,所以每一个组件需要有自己独立的一份数据--如果复用是一个对象的话,就是共享同样的data对象,当你修改一个属性的时候，data也会发生改变,如果是函数的话,就相当于创建新的obj,所以不一样----｛｝相当于new Object
+1.如果是对象
+        var obj = {
+            name: &#39;jack&#39;
+        }
+        var text1 = obj
+        var text2 = obj
+        text1.name = &#39;rose&#39;
+        console.log(text2.name); //rose
+
+2.工厂函数
+ var fun = function() {
+            return {
+                name: &#39;jack&#39;
+            }
+        }
+        var text1 = fun()
+        var text2 = fun()
+        text1.name = &#39;rose&#39;
+        console.log(text2.name); //jack
+
+
+
+</code></pre>
+<pre><code class="lang-javascript">37组件之间的传值
+*父传子--父组件将数组传到引入的子组件,子组件通过prop来接收参数.
+     &lt;div id=&quot;app&quot;&gt;
+        &lt;new-input :item=&quot;item&quot; v-for=&quot;(item,index) in list&quot;&gt;&lt;/new-input&gt;
+    &lt;/div&gt;
+       Vue.component(&#39;new-input&#39;, {
+            props: [&#39;item&#39;],
+            template: &#39;&lt;div&gt;{{item.name}}---{{item.age}}&lt;/div&gt;&#39;
+        })
+        new Vue({
+            el: &#39;#app&#39;,
+            data: {
+                list: [
+                    { 
+                        name: &#39;jack&#39;,
+                        age: 18
+                    },
+                    { 
+                        name: &#39;rose&#39;,
+                        age: 20
+                    }
+                ]
+            }
+        })
+*子传父---子组件事件触发
+&lt;button v-on:click=&quot;$emit(&#39;enlarge-text&#39;)&quot;&gt;
+  Enlarge text
+&lt;/button&gt;
+
+1、父组件可以使用 props 把数据传给子组件。
+
+2、子组件可以使用 $emit 触发父组件的自定义事件。
+
+$emit 触发当前实例上的事件。附加参数都会传给监听器回调
+*组件之间的v-model的绑定
+组件之间
+
+
+*兄弟组件之间的传值
+1.先是子传父,再是父传子
+2.借助中央事件总线
+https://blog.csdn.net/amanda_wmy/article/details/80134823
+
+</code></pre>
+<pre><code>38 抽取公共组件
+调用open的方法～～～多练练吧～～～
+1.先将组件抽出去,子组件需要的值,父组件传过来,父组件需要的值或者事件,子组件emit传过去
+2.子组件里面调完接口再触发emit去保存等操作
+
+
+</code></pre><pre><code>40 axios
+封装
+
+</code></pre><pre><code>41 兄弟组件的传值--bus事件总线传值
+https://blog.csdn.net/zhonghuachun/article/details/80594439
+vue中$emit与$on
+　var Event = new Vue();　　　　　　相当于又new了一个vue实例，Event中含有vue的全部方法；
+Event.$emit(&#39;msg&#39;,this.msg);　　　   发送数据，第一个参数是发送数据的名称，接收时还用这个名字接收，第二个参数是这个数据现在的位置；
+
+　　Event.$on(&#39;msg&#39;,function(msg){　　接收数据，第一个参数是数据的名字，与发送时的名字对应，第二个参数是一个方法，要对数据的操作
+
+　　　　/这里是对数据的操作
+
+　　})
+
+</code></pre><pre><code class="lang-javascript">42 vuex
+应用于：
+多个视图依赖于同一状态。
+来自不同视图的行为需要变更同一状态
+
+每一个 Vuex 应用的核心就是 store（仓库）。“store”基本上就是一个容器，它包含着你的应用中大部分的状态 (state)。Vuex 和单纯的全局对象有以下两点不同：
+1.Vuex 的状态存储是响应式
+2.你不能直接改变 store 中的状态。改变 store 中的状态的唯一途径就是显式地提交 (commit) mutation
+
+1.Vuex 通过 store 选项，提供了一种机制将状态从根组件“注入”到每一个子组件中
+const app = new Vue({
+  el: &#39;#app&#39;,
+  // 把 store 对象提供给 “store” 选项，这可以把 store 的实例注入所有的子组件
+  store,
+  components: { Counter },
+  template: `
+    &lt;div class=&quot;app&quot;&gt;
+      &lt;counter&gt;&lt;/counter&gt;
+    &lt;/div&gt;
+  `
+})
+
+const Counter = {
+  template: `&lt;div&gt;{{ count }}&lt;/div&gt;`,
+  computed: {
+    count () {
+      return this.$store.state.count
+    }
+  }
+}
+用mapState
+   computed: mapState({
+        count: &#39;count&#39;,
+        init: &#39;init&#39;
+    })
+当映射的计算属性的名称与 state 的子节点名称相同时，我们也可以给 mapState 传一个字符串数组
+  computed: mapState([
+        &#39;count&#39;,
+        &#39;init&#39;]
+    )
+2mapState 函数返回的是一个对象。我们如何将它与局部计算属性混合使用呢？通常，我们需要使用一个工具函数将多个对象合并为一个，以使我们可以将最终对象传给 computed 属性。但是自从有了对象展开运算符
+
+    // 混合使用
+    computed: {
+        test(){
+            return true
+        },
+        ...mapState({
+            count: state =&gt; state.count,
+            init: state =&gt; state.init,
+            other(state) {
+                return state.count + state.init
+            }
+        })
+    }
+3.Vuex 允许我们在 store 中定义“getter”（可以认为是 store 的计算属性）。就像计算属性一样，getter 的返回值会根据它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算
+Getter 会暴露为 store.getters 对象，你可以以属性的形式访问这些值
+你也可以通过让 getter 返回一个函数，来实现给 getter 传参。在你对 store 里的数组进行查询时非常有用
+  getters: {
+        //计算属性
+        doneTodos: state =&gt; {
+            return state.todos.filter(todo =&gt; todo.done)
+        },
+        // 可以接收两个参数,第一个是state,第二个是getter
+        otherComputed:(state, getters) =&gt; {
+            getters.doneTodos.push({
+                id: 4, text: &#39;...&#39;, done: true
+            })
+            return  getters.doneTodos
+            // return  getters.doneTodos
+        },
+        //变成一个函数来传参数
+        getTodoById: (state) =&gt; (id) =&gt; {
+          return state.todos.find(todo =&gt; todo.id === id)
+        }
+    }
+4 更改 Vuex 的 store 中的状态的唯一方法是提交 mutation
+4.1怎么传入额外的参数--Mutation 必须是同步函数
+       increase() {
+            store.commit(&#39;addDouble&#39;, 2)  
+        }
+     mutations: {
+        increment (state) {
+            state.count ++
+        },
+        addDouble(state, payload) {
+            state.init += payload
+        },
+    },
+4.2辅助函数提交
+import { mapMutations } from &#39;vuex&#39;
+
+export default {
+  // ...
+  methods: {
+    ...mapMutations([
+      &#39;increment&#39;, // 将 `this.increment()` 映射为 `this.$store.commit(&#39;increment&#39;)`
+
+      // `mapMutations` 也支持载荷：
+      &#39;incrementBy&#39; // 将 `this.incrementBy(amount)` 映射为 `this.$store.commit(&#39;incrementBy&#39;, amount)`
+    ]),
+    ...mapMutations({
+      add: &#39;increment&#39; // 将 `this.add()` 映射为 `this.$store.commit(&#39;increment&#39;)`
+    })
+  }
+}
+5.
+             makeSync(state) {
+            // state.count++
+            console.log(state.count, &#39;state.count1&#39;);
+            setTimeout(()=&gt; {
+                state.count++
+            console.log(state.count, &#39;state.count2&#39;);
+            }, 3000) 
+            console.log(state.count, &#39;state.count3&#39;);   
+        }
+调试debug困难 无法预知状态什么时候改变
+6.Action 类似于 mutation，不同在于：
+
+Action 提交的是 mutation，而不是直接变更状态。
+Action 可以包含任意异步操作。
+ actions: {
+    actionIncrement (context) {
+       context.commit(&#39;increment&#39;)
+    }
+ }
+ testAction() {
+     store.dispatch(&#39;actionIncrement&#39;)
+   actions: {
+  actionA ({ commit }) {
+    return new Promise((resolve, reject) =&gt; {
+      setTimeout(() =&gt; {
+        commit(&#39;someMutation&#39;)
+        resolve()
+      }, 1000)
+    })
+  }
+}
+store.dispatch(&#39;actionA&#39;).then(() =&gt; {
+  // ...
+})
+
+</code></pre>
+<pre><code>43 webpack--搭建项目https://github.com/PanJiaChen/vue-admin-template
+load主要是遇到什么样的文件,该怎么打包,查看webpack可以知道对应的load 进行处理
+tree shaking只支持静态资源的打包
+optimization sideEffets
+43.1可能在本地文件上可以,但是在打包上不行,主要是因为样式没有用scoped或者没有用div包起来
+</code></pre><pre><code class="lang-javascript">44 import 与require的区别
+require：运行时加载
+import：编译时加载（效率更高）【由于是编译时加载，所以import命令会提升到整个模块的头部】
+44.1 require是AMD规范的写法，import是ES6模块的写法
+44.2
+
+let { a, b, c } = require(&#39;module&#39;);
+// import { a, b, c } from &#39;module&#39;;
+
+看似只引入了a，b，c，实际上引入了整个模块，然后通过解构赋值给a，b，c赋值对应的模块内容
+44.3
+require是执行时引入，import是编译时引入，因此，require可以用在代码的任何地方，import即使不写在文件的开头也会自动提升到开头，比如
+foo();
+
+import { foo } from &#39;my_module&#39;;
+44.4
+运行时加载就是说 执行require函数后再加载/ 编译加载就是把你import的模块在编译的时候就加载过来了，一进来就执行/把模块代码编译到你的文件中去，一进入这个文件你那些引入的模块js也执行了/require就是你必须require才去寻找模块并且执行
+
+</code></pre>
+<pre><code>45 https://juejin.im/post/5cc580215188257feb01cad8
+webpack打包
+有四个核心模块
+1.入口起点entry--来指定一个入口起点,webpack 会找出有哪些模块和库是入口起点（直接和间接）依赖的
+
+2.出口output 属性告诉 webpack 在哪里输出它所创建的 bundles，以及如何命名这些文件，默认值为 ./dist
+----来告诉 webpack bundle 的名称，以及我们想要 bundle 生成(emit)到哪里
+
+生成的bundle文件添加hash为什么添加hash？
+
+是为了防止浏览器缓存机制阻止文件的更新，为打包文件添加hash后缀之后，每次构建打包生成的文件名的hash都会发生改变，强制浏览器进行刷新，获取当前最新的文件就可以防止使用缓存文件。
+
+3.loader 让 webpack 能够去处理那些非 JavaScript 文件
+    test 属性，用于标识出应该被对应的 loader 进行转换的某个或某些文件。
+  use 属性，表示进行转换时，应该使用哪个 loader
+  vue-loader---css-loader---babel-loader
+
+4.plugin
+loader 被用于转换某些类型的模块，而插件则可以用于执行范围更广的任务。插件的范围包括，从打包优化和压缩，一直到重新定义环境中的变量。插件接口功能极其强大，可以用来处理各种各样的任务
+
+在npm run build之后，dist文件夹中并没有index.html文件，要想引用打包的文件，需要手动引用，并且由于上一步为bundle添加了hash，所以每次构建都需要手动修改script标签的src路径。
+使用HtmlWebpackPlugin可以自动生成html文件并注入打包的文件。
+
+CleanWebpackPlugin每次打包都会去掉之前的
+npm i -D webpack-dev-server
+webpack-dev-server生成的包并没有放在你的真实目录中,而是放在了内存中
+
+比如在本地运行没事,但是在线上有问题,可能是样式的问题
+
+
+</code></pre><pre><code>46 html5新标签
+46.1 
+&lt;audio&gt;--定义音频内容
+&lt;video&gt;--定义视频内容
+&lt;header&gt;--定义文档的头部区域
+&lt;footer&gt;--定义 section 或 document 的页脚
+
+</code></pre><pre><code class="lang-css">47 css新特性
+flex-box:可以用来布局
+border-radius :给边框做圆角
+box-sizing:content-box; box-sizing:border-box
+media媒体查询
+@media screen and (max-width: 699px) and (min-width: 520px) {
+    ul li a {
+        padding-left: 30px;
+        background: url(email-icon.png) left center no-repeat;
+    }
+}
+
+</code></pre>
+<pre><code class="lang-css">48jquery的一些常见的用法
+------------------------------
+48.1获取元素对象
+  $(&#39;#id&#39;)
+  $(&#39;.class&#39;)
+  $(&#39;div&#39;)
+------------------------------
+48.2ajax
+$.ajax(
+    {
+    url:&quot;demo_test.txt&quot;,
+    data:{}，
+    success:function(result){
+        $(&quot;#div1&quot;).html(result);
+    }
+});
+------------------------------
+48.3属性
+$(&quot;img&quot;).attr(&quot;src&quot;)
+$(&quot;img&quot;).removeAttr(&quot;src&quot;)
+$(&quot;p&quot;).addClass(&quot;selected&quot;)
+$(&quot;p&quot;).removeClass(&quot;selected&quot;)
+$(&quot;p&quot;).html(&quot;Hello &lt;b&gt;world&lt;/b&gt;!&quot;)--设置html内容
+48.4 css方面
+$(&quot;p&quot;).css({ &quot;color&quot;: &quot;#ff0011&quot;, &quot;background&quot;: &quot;blue&quot; });
+------------------------------
+48.4 事件
+直接用on写事件--点击
+$(&quot;p&quot;).on(&quot;click&quot;, function(){
+alert( $(this).text() );
+});
+在DOM加载完成时运行的代码
+$(document).ready(function(){
+  // 在这里写你的代码...
+});
+------------------------------
+48.5事件对象
+eve.preventDefault()--阻止默认事件
+eve.currentTarget--在事件冒泡阶段中的当前DOM元素
+event.stopPropagation()--灭掉冒泡
+除了阻止元素上其它的事件处理函数的执行，这个方法还会通过在内部调用 event.stopPropagation() 来停止事件冒泡。如果仅仅想要停止事件冒泡到前辈元素上，而让这个元素上的其它事件处理函数继续执行，我们可以使用event.stopPropagation() 来代替
+</code></pre>
+<pre><code class="lang-javascript">49 事件轮询(Event Loop)
+------------------------------
+49.1js是单线程的,什么是单线程？就是在同一时间只能做一个任务,代码也是从上到下执行的,如果有多个任务，就必须排队，前面一个任务完成，再执行后面一个任务，以此类推，如果一个任务耗时很长,就会一直等待,直接等到上一个处理好
+------------------------------
+49.2 为了解决这个问题，分为两类任务：同步和异步
+什么是同步？什么是异步呢
+同步模式是--后一个任务等待前一个任务结束，然后再执行,程序的执行顺序与任务的排列顺序是一致的、同步的
+异步模式是--每一个任务有一个或多个回调函数（callback），前一个任务结束后，不是执行后一个任务，而是执行回调函数，后一个任务则是不等前一个任务结束就执行，所以程序的执行顺序与任务的排列顺序是不一致的、异步的
+------------------------------
+49.3事件轮询
+具体来说，异步运行机制如下：
+（1）所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。
+（2）主线程之外，还存在一个&quot;任务队列&quot;（task queue）。只要异步任务有了运行结果，就在&quot;任务队列&quot;之中放置一个事件。
+（3）一旦&quot;执行栈&quot;中的所有同步任务执行完毕，系统就会读取&quot;任务队列&quot;，看看里面有哪些事件。那些对应的异步任务，于是结束等待状态，进入执行栈，开始执行。
+（4）述过程会不断重复，也就是常说的Event Loop(事件循环)。
+
+js执行机制
+（所有同步任务都在主线程上执行，形成一个&quot;执行栈&quot;）
+首先判断JS是同步还是异步,同步就进入主线程,异步就进入event table
+异步任务在event table中注册函数,当满足触发条件后,被推入任务队列
+同步任务进入主线程后一直执行,直到主线程空闲时,才会去任务队列中查看是否有可执行的异步任务,如果有就推入主线程中
+------------------------------
+&quot;异步模式&quot;编程的4种方法
+1.回调函数
+2.事件监听,任务的执行不取决于代码的顺序，而取决于某个事件是否发生
+3.发布订阅模式，也叫观察者模式
+4.Promises对象
+
+最基础的异步是setTimeout和setInterval函数，很常见，但是很少人有人知道其实这就是异步，因为它们可以控制js的执行顺序,关于setTimeout要补充的是，即便主线程为空，0毫秒实际上也是达不到的。根据HTML的标准，最低是4毫秒
+------------------------------
+49.4 任务又会分为宏任务和微任务
+macro-task(宏任务)：包括整体代码script，setTimeout，setInterval
+micro-task(微任务)：Promise，process.nextTick
+事件循环的顺序，决定js代码的执行顺序。进入整体代码(宏任务)后，开始第一次循环。接着执行所有的微任务。然后再次从宏任务开始，找到其中一个任务队列执行完毕，再执行所有的微任务。
+//微任务和宏任务执行顺序
+console.log(&#39;1&#39;);
+setTimeout(function() {
+    console.log(&#39;2&#39;);
+    process.nextTick(function() {
+        console.log(&#39;3&#39;);
+    })
+    new Promise(function(resolve) {
+        console.log(&#39;4&#39;);
+        resolve();
+    }).then(function() {
+        console.log(&#39;5&#39;)
+    })
+})
+process.nextTick(function() {
+    console.log(&#39;6&#39;);
+})
+new Promise(function(resolve) {
+    console.log(&#39;7&#39;);
+    resolve();
+}).then(function() {
+    console.log(&#39;8&#39;)
+})
+
+setTimeout(function() {
+    console.log(&#39;9&#39;);
+    process.nextTick(function() {
+        console.log(&#39;10&#39;);
+    })
+    new Promise(function(resolve) {
+        console.log(&#39;11&#39;);
+        resolve();
+    }).then(function() {
+        console.log(&#39;12&#39;)
+    })
+})
+// 1，7，6，8，2，4，3，5，9，11，10，12
+
+ //  async 函数中可能会有 await 表达式，这会使 async 函数暂停执行，等待表达式中的
+ // Promise 解析完成后继续执行 async 函数并返回解决结果。
+                async function async1(){
+            console.log(&#39;1&#39;)
+            await async2()
+            console.log(&#39;2&#39;)
+        }
+        async function async2(){
+            console.log(&#39;3&#39;)
+        }
+        console.log(&#39;4&#39;)
+        setTimeout(function(){
+            console.log(&#39;5&#39;) 
+        },0)  
+        async1();
+        new Promise(function(resolve){
+            console.log(&#39;6&#39;)
+            resolve();
+        }).then(function(){
+            console.log(&#39;7&#39;)
+        })
+        console.log(&#39;8&#39;)
+
+        // 4136 8275
+</code></pre>
+<pre><code class="lang-javascript">50 跨域请求的问题
+
+同源策略: 域名，协议，端口相同
+同源策略是浏览器的行为，是为了保护本地数据不被JavaScript代码获取回来的数据污染，因此拦截的是客户端发出的请求回来的数据接收，即请求发送了，服务器响应了，但是无法被浏览器接收
+
+50.1xios没有提供jsonp等方法进行跨域访问数据
+1.1要么就是后台处理
+1.2代理可以解决的原因：因为客户端请求服务端的数据是存在跨域问题的，而服务器和服务器之间可以相互请求数据，是没有跨域的概念（如果服务器没有设置禁止跨域的权限问题），也就是说，我们可以配置一个代理的服务器可以请求另一个服务器中的数据，然后把请求出来的数据返回到我们的代理服务器中，代理服务器再返回数据给我们的客户端，这样我们就可以实现跨域访问数据
+---跨域配置baseUrl,然后在--去做拦截
+proxyTable: {
+      &#39;/api&#39;: {
+        target:&#39;http://api.douban.com/v2&#39;, // 你请求的第三方接口
+        changeOrigin:true, // 在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+        pathRewrite:{  // 路径重写，
+          &#39;^/api&#39;: &#39;&#39;  // 替换target中的请求地址，也就是说以后你在请求http://api.douban.com/v2/XXXXX这个地址的时候直接写成/api即可。
+        }
+      }
+50.2通过jsonp
+首先是利用script标签的src属性来实现跨域。因为src属性无跨域限制的特点
+通过将前端方法作为参数传递到服务器端，然后由服务器端注入参数之后再返回，实现服务器端向客户端通信。
+由于使用script标签的src属性，因此只支持get方法限制
+alert(&quot;You’re at IP address &quot; + response.ip + &quot;, which is in &quot; + 
+ response.city + &quot;, &quot; + response.region_name); 
+} 
+var script = document.createElement(&quot;script&quot;); 
+script.src = &quot;http://freegeoip.net/json/?callback=handleResponse&quot;; 
+document.body.insertBefore(script, document.body.firstChild);
+JSONP 由两部分组成：回调函数和数据。回调函数是当响应到来时应该在页面中调用的函数。回调
+函数的名字一般是在请求中指定的。而数据就是传入回调函数中的JSON数据。下面是一个典型的JSONP
+请求。
+
+只能发送get请求。因为script只能发送get请求
+需要后台配合。此种请求方式应该前后端配合，将返回结果包装成callback(result)的形式
+JSONP 之所以在开发人员中极为流行，主要原因是它非常简单易用。与图像 Ping 相比，它的优点
+在于能够直接访问响应文本，支持在浏览器与服务器之间双向通信。不过，JSONP 也有两点不足。
+首先，JSONP 是从其他域中加载代码执行。如果其他域不安全，很可能会在响应中夹带一些恶意代
+码，而此时除了完全放弃 JSONP 调用之外，没有办法追究。因此在使用不是你自己运维的 Web 服务时，
+一定得保证它安全可靠。
+其次，要确定 JSONP 请求是否失败并不容易。虽然 HTML5 给&lt;script&gt;元素新增了一个 onerror
+事件处理程序，但目前还没有得到任何浏览器支持。为此，开发人员不得不使用计时器检测指定时间内
+图灵社区会员 StinkBC(StinkBC@gmail.com) 专享 尊重版权
+588 第 21 章 Ajax 与 Comet 
+是否接收到了响应。但就算这样也不能尽如人意，毕竟不是每个用户上网的速度和带宽都一样
+
+50.3图像ping
+第一种跨域请求技术是使用&lt;img&gt;标签。我们知道，一个网页可以从任何网页中加载图像，不
+用担心跨域不跨域
+var img = new Image(); 
+img.onload = img.onerror = function(){ 
+ alert(&quot;Done!&quot;); 
+}; 
+img.src = &quot;http://www.example.com/test?name=Nicholas&quot;;
+通过图像 Ping，浏览器得不到任何具体的数据，但通过侦听 load 和 error 事件，它能知道响应是什么时
+候接收到的。  
+
+50.4CORS（Cross-Origin Resource Sharing，跨源资源共享）
+必须访问跨源资源时，浏览器与服务器应该如何沟通。CORS 背后的基本思想，就是使用自定义的 HTTP 头部
+让浏览器与服务器进行沟通，从而决定请求或响应是应该成功，还是应该失败
+
+现代浏览器都支持CORS，所以前端不需要做任何改变，即使普通的ajax，只需要服务器实现CORS接口；http如何请求服务器，我们不会有如何感觉。
+
+在发送该请求时，需要给它附加一个额外的 Origin 头部，其中包含请求页面的源信息（协议、域名和端口），以便服务器根据这个头部信息来决定是否给予响应。下面是 Origin 头部的一个示例：Origin: http://www.nczonline.net 
+如果服务器认为这个请求可以接受，就在 Access-Control-Allow-Origin 头部中回发相同的源信息（如果是公共资源，可以回发&quot;*&quot;）。例如：Access-Control-Allow-Origin: http://www.nczonline.net 
+如果没有这个头部，或者有这个头部但源信息不匹配，浏览器就会驳回请求。正常情况下，浏览器会处理请求。
+</code></pre>
+<pre><code>51 BootStrap,Element ui,Mint-ui,了解Cube ui,Vant ui
+删格系统
+</code></pre><pre><code class="lang-javascript">52常见的es6语法
+------------------------------
+let 和const
+    let声明的变量只在它所在的代码块有效
+    不存在变量名提升
+    在代码块内，使用let命令声明变量之前，该变量都是不可用的。这在语法上，称为“暂时性死区”
+    const声明的变量不得改变值，这意味着，const一旦声明变量，就必须立即初始化，不能留到以后赋值
+------------------------------
+解构赋值
+------------------------------
+ES6 允许为函数的参数设置默认值，即直接写在参数定义的后面
+function log(x, y = &#39;World&#39;) {
+  console.log(x, y);
+}
+
+log(&#39;Hello&#39;) // Hello World
+log(&#39;Hello&#39;, &#39;China&#39;) // Hello China
+log(&#39;Hello&#39;, &#39;&#39;) // Hello
+-------------------------------
+promise
+红灯3秒亮一次，绿灯1秒亮一次，黄灯2秒亮一次；如何让三个灯不断交替重复亮灯？（用Promise实现）
+        function text(timer, color) {
+            return new Promise((resolve, reject)=&gt; {
+                setTimeout(()=&gt; {
+                    resolve(color)
+                }, timer)
+            })
+        }
+        function cb() {
+            text(3000, &#39;red&#39;).then((res)=&gt; {
+                console.log(res);      
+                return text(1000, &#39;green&#39;)
+            }).then((res)=&gt; {
+                console.log(res);
+                return text(2000, &#39;yellow&#39;)
+            }).then((res)=&gt; {
+                console.log(res);
+                return cb()
+            })
+        }
+        cb()
+Promse.all在处理多个异步处理时非常有用，比如说一个页面上需要等两个或多个ajax的数据回来以后才正常显示，在此之前只显示loading图标
+
+顾名思义，Promse.race就是赛跑的意思，意思就是说，Promise.race([p1, p2, p3])里面哪个结果获得的快，就返回那个结果，不管结果本身是成功状态还是失败状态
+-------------------------------
+ promise 有 3 种状态：pending、fulfilled 或 rejected。状态改变只能是 pending-&gt;fulfilled 或者 pending-&gt;rejected，状态一旦改变则不能再
+</code></pre>
+<pre><code>ES5 只有两种声明变量的方法：var命令和function命令。ES6 除了添加let和const命令，后面章节还会提到，另外两种声明变量的方法：import命令和class命令。所以，ES6 一共有 6 种声明变量的方法
+
+</code></pre><pre><code class="lang-javascript">53性能优化.
+53.1资源压缩合并，减少http请求
+53.2非核心代码异步加载---异步加载的方式---异步记载的区别
+defer和sync
+defer
+53.3 利用浏览器缓存---缓存的分类---缓存的原理
+53.4 使用CDN
+53.5 预解析
+&lt;link rel=&quot;dns-prefetch&quot; href=&quot;//www.baidu.com&quot;&gt;
+&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot;&gt;
+
+
+
+</code></pre>
+<pre><code class="lang-css">54 预处理器
+54.1直接去下载loader就行了
+Less的书写风格更接近于css,Sass、Stylus 相比之下激进一些，利用缩进、空格和换行来减少需要输入的字符,也兼容css的写法
+51.2
+混入（mixin）应该说是预处理器最精髓的功能之一了
+它提供了 CSS 缺失的最关键的东西：样式层面的抽象
+https://www.jianshu.com/p/9d84bb5043bb
+Less 的混入有两种方式：
+1.直接在目标位置混入另一个类样式（输出已经确定，无法使用参数）；
+2.定义一个不输出的样式片段（可以输入参数），在目标位置输出。
+.alert {
+  font-weight: 700;
+}
+
+.highlight(@color: red) {
+  font-size: 1.2em;
+  color: @color;
+}
+
+.heads-up {
+  .alert;
+  .highlight(red);
+}
+--------------------
+.alert {
+  font-weight: 700;
+}
+.heads-up {
+  font-weight: 700;
+  font-size: 1.2em;
+  color: red;
+}
+</code></pre>
+<pre><code>55git版本控制工具
+创建分支 git branch dev
+创建并切换分支 git branch -b dev
+https://www.cnblogs.com/antyhouse/p/8967635.html
+</code></pre><pre><code>56 gulp
+gulp的简单应用
+gulp和webpack的区别
+它们都属于前端构建工具，但gulp是任务管理工具（task runner），webpack是模块化打包工具
+
+使用gulp可以配置各种插件来做css或js文件的合并压缩、编译sass或less、添加兼容性前缀（-webkit-, -moz- …）、自动刷新浏览器等等，它能替代手工实现自动化工作、优化前端工作流程。
+
+一。gulp：强调的是前端开发的流程，通过配置一系列的task，定义task处理的事物（例如文件压缩合并、雪碧图、启动server、 版本控制等），然后定义执行顺序，来让gulp执行task，从而构建前端项目的流程。
+
+webpack：是一个前端模块化方案，侧重模块打包，把开发中的所有资源（图片、js文件、css文件等）都看成模块，通过loader（加载器）和plugins（插件）对资源进行处理，打包成符合生产环境部署的前端资源。
+
+相同：可以文件合并与压缩（css）
+
+不同点：
+
+虽然都是前端自动化构建工具，但看他们的定位就知道不是对等的。
+
+gulp严格上讲，模块化不是他强调的东西，他旨在规范前端开发流程。
+
+webpack更是明显强调模块化开发，而那些文件压缩合并、预处理等功能，不过是他附带的功能。
+https://segmentfault.com/a/1190000018336570
+
+</code></pre>
+          	</article>
+        </div>
+		</div>
+  </body>
+</html>
+<script type="text/javascript" src="toc/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="toc/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="toc/js/ztree_toc.js"></script>
+<script type="text/javascript" src="toc_conf.js"></script>
+
+<SCRIPT type="text/javascript" >
+<!--
+$(document).ready(function(){
+    var css_conf = eval(markdown_panel_style);
+    $('#readme').css(css_conf)
+    
+    var conf = eval(jquery_ztree_toc_opts);
+		$('#tree').ztree_toc(conf);
+});
+//-->
+</SCRIPT>
