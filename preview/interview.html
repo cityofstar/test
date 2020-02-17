@@ -65,18 +65,28 @@
 				</div>
         <div id='readme' style='width:70%;margin-left:20%;'>
           	<article class='markdown-body'>
-            	<p>..~~~~
-1.路由的懒加载
-<a href="https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6">https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6</a></p>
-<pre><code>
-</code></pre><p>把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就更加高效了。
-const Foo = () =&gt; import(/<em> webpackChunkName: &quot;group-foo&quot; </em>/ &#39;./Foo.vue&#39;)
-const Bar = () =&gt; import(/<em> webpackChunkName: &quot;group-foo&quot; </em>/ &#39;./Bar.vue&#39;)
-const Baz = () =&gt; import(/<em> webpackChunkName: &quot;group-foo&quot; </em>/ &#39;./Baz.vue&#39;)</p>
-<pre><code>
-</code></pre><p>2.iterator接口目的是为所有的数据结构提供一种统一的访问机制,数据结构只要具有Symbol.iterator属性,那就可以认为他是可遍历的</p>
-<pre><code>
-~~~~javascript
+            	<pre><code class="lang-javascript">1.路由的懒加载
+在访问路由的时候,才去加载对应的组件
+https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6
+1.1什么是异步组件
+将应用分割成小一些的代码块，并且只在需要的时候才从服务器加载一个模块
+第一,可以将异步组件定义为返回一个 Promise 的工厂函数
+const Foo = () =&gt; Promise.resolve({ /* 组件定义对象 */ })
+第二，在 Webpack 2 中，我们可以使用动态 import语法来定义代码分块点 (split point)
+import(&#39;./Foo.vue&#39;)
+结合这两者，这就是如何定义一个能够被 Webpack 自动代码分割的异步组件。
+const Foo = () =&gt; import(&#39;./Foo.vue&#39;)
+常用的懒加载方式有两种：即使用vue异步组件 和 ES6中的import
+
+</code></pre>
+<pre><code>把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就更加高效了。
+懒加载 是利用import方法，当你切换到这个路由的时候才对这个文件开始加载执行,类似require，只有调用它才会去加载文件并执行
+const Foo = () =&gt; import(/* webpackChunkName: &quot;group-foo&quot; */ &#39;./Foo.vue&#39;)
+const Bar = () =&gt; import(/* webpackChunkName: &quot;group-foo&quot; */ &#39;./Bar.vue&#39;)
+const Baz = () =&gt; import(/* webpackChunkName: &quot;group-foo&quot; */ &#39;./Baz.vue&#39;)
+</code></pre><pre><code>2.iterator接口目的是为所有的数据结构提供一种统一的访问机制,数据结构只要具有Symbol.iterator属性,那就可以认为他是可遍历的
+</code></pre><pre><code>
+​~~~~javascript
 3.keep-alive的写法
      &lt;keep-alive &gt;
       &lt;router-view v-if=&quot;$route.meta.keepAlive&quot;&gt;&lt;/router-view&gt;
@@ -1356,6 +1366,62 @@ gulp严格上讲，模块化不是他强调的东西，他旨在规范前端开�
 
 webpack更是明显强调模块化开发，而那些文件压缩合并、预处理等功能，不过是他附带的功能。
 https://segmentfault.com/a/1190000018336570
+
+</code></pre><pre><code class="lang-html">57语意化的优点
+增强可读性,增强seo搜索
+setion:某部分
+你好&lt;em&gt;周杰伦&lt;/em&gt;---斜体
+你好&lt;strong&gt;周杰伦&lt;/strong&gt;强调
+实用场景
+自然语言表达能力的补充；
+文章标题摘要；
+适合机器阅读的整体结构。c
+</code></pre>
+<pre><code>58 7种类型
+
+Undefined；
+Null；
+Boolean；
+String；
+Number；
+Symbol；
+Object。
+
+</code></pre><pre><code>59 undefined 与 null的区别
+Undefined跟 null 有一定的表意差别，null表示的是：“定义了但是为空”。所以，在实际编程时，我们一般不会把变量赋值为 undefined，这样可以保证所有值为 undefined 的变量，都是从未赋值的自然状态。
+
+Null 类型也只有一个值，就是 null，它的语义表示空值，与 undefined 不同，null 是 JavaScript 关键字，所以在任何代码中，你都可以放心用 null 关键字来获取 null 值
+
+59.1任何涉及 NaN 的操作（例如 NaN/10）都会返回 NaN,NaN与任何数都不想等，包括他本身
+
+</code></pre><pre><code>60JavaScript对象的两类属性
+----------------------------
+先来说第一类属性，数据属性。它比较接近于其它语言的属性概念。数据属性具有四个特征。
+
+value：就是属性的值。
+writable：决定属性能否被赋值。
+enumerable：决定for in能否枚举该属性。
+configurable：决定该属性能否被删除或者改变特征值
+------------------------------
+第二类属性是访问器（getter/setter）属性，它也有四个特征。
+
+getter：函数或undefined，在取属性值时被调用。
+setter：函数或undefined，在设置属性值时被调用。
+enumerable：决定for in能否枚举该属性。
+configurable：决定该属性能否被删除或者改变特征值
+
+
+</code></pre><pre><code>61 浏览器如何工作
+实际上，对浏览器的实现者来说，他们做的事情，就是把一个URL变成一个屏幕上显示的网页。
+
+这个过程是这样的：
+
+浏览器首先使用HTTP协议或者HTTPS协议，向服务端请求页面；
+把请求回来的HTML代码经过解析，构建成DOM树；
+计算DOM树上的CSS属性；
+最后根据CSS属性对元素逐个进行渲染，得到内存中的位图；
+一个可选的步骤是对位图进行合成，这会极大地增加后续绘制的速度；
+合成之后，再绘制到界面上。
 
 </code></pre>
           	</article>
