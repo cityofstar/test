@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard-polyfill/3.0.1/main/clipboard-polyfill.js"></script>
+  <div class="btn" onclick="copyText()">你好牛啊哈哈哈啊哈</div>
+</head>
+<body>
+  <script>
+    import * as clipboard from "clipboard-polyfill/text"
+    function copyText() {
+      clipboard.writeText("hello world")
+    }
+    
+
+  </script>
+</body>
+</html>
